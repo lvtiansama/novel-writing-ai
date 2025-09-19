@@ -47,16 +47,25 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        sidebar: {
-          DEFAULT: "hsl(var(--sidebar-background))",
-          foreground: "hsl(var(--sidebar-foreground))",
-          primary: "hsl(var(--sidebar-primary))",
-          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
-          accent: "hsl(var(--sidebar-accent))",
-          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
-          border: "hsl(var(--sidebar-border))",
-          ring: "hsl(var(--sidebar-ring))",
+        "file-explorer": {
+          bg: "hsl(var(--file-explorer-bg))",
+          "item-hover": "hsl(var(--file-explorer-item-hover))",
+          "item-active": "hsl(var(--file-explorer-item-active))",
         },
+        editor: {
+          bg: "hsl(var(--editor-bg))",
+          "line-number": "hsl(var(--editor-line-number))",
+          selection: "hsl(var(--editor-selection))",
+        },
+        chat: {
+          bg: "hsl(var(--chat-bg))",
+          "message-user": "hsl(var(--chat-message-user))",
+          "message-assistant": "hsl(var(--chat-message-assistant))",
+        },
+      },
+      backgroundImage: {
+        "gradient-primary": "var(--gradient-primary)",
+        "gradient-subtle": "var(--gradient-subtle)",
       },
       borderRadius: {
         lg: "var(--radius)",
