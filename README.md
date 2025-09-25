@@ -6,9 +6,9 @@
 ![React](https://img.shields.io/badge/React-18.3.1-61dafb)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.8.3-3178c6)
 ![Node.js](https://img.shields.io/badge/Node.js-Express-339933)
-![Python](https://img.shields.io/badge/Python-AI%20Agent-3776ab)
+![AI](https://img.shields.io/badge/AI-OpenAI%20%7C%20DeepSeek-ff6b6b)
 
-**基于多Agent架构的智能小说创作助手**
+**基于AI的智能小说创作助手**
 
 [功能特性](#功能特性) • [技术架构](#技术架构) • [快速开始](#快速开始) • [API文档](#api文档) • [部署指南](#部署指南)
 
@@ -16,7 +16,7 @@
 
 ## 📖 项目简介
 
-Novel Writing AI 是一个基于多Agent架构的智能小说创作助手，集成了前端React应用、Node.js后端服务和Python AI代理系统。该系统能够帮助作者管理角色、构建世界观、组织章节内容，并提供智能创作建议。
+Novel Writing AI 是一个基于AI的智能小说创作助手，集成了前端React应用和Node.js后端服务。该系统能够帮助作者管理角色、构建世界观、组织章节内容，并提供智能创作建议。
 
 ### 🎯 核心功能
 
@@ -48,12 +48,11 @@ graph TB
         H[安全验证]
     end
     
-    subgraph "AI代理层 AI Agents"
-        I[主Agent - 创作协调]
-        J[角色Agent - 角色管理]
-        K[情节Agent - 情节设计]
-        L[世界观Agent - 设定管理]
-        M[Agno 框架]
+    subgraph "AI服务层 AI Services"
+        I[OpenAI API]
+        J[DeepSeek API]
+        K[AI提示词管理]
+        L[智能创作建议]
     end
     
     subgraph "数据层 Data Layer"
@@ -64,9 +63,9 @@ graph TB
     
     A --> E
     E --> I
-    I --> J
-    I --> K
-    I --> L
+    E --> J
+    E --> K
+    E --> L
     E --> N
     N --> O
     N --> P
@@ -87,10 +86,10 @@ graph LR
         AUTH[认证服务]
     end
     
-    subgraph "AI处理层"
-        MAIN[主Agent]
-        SUB[子Agent群]
+    subgraph "AI服务层"
+        AI[AI API调用]
         PROMPT[提示词管理]
+        RESPONSE[响应处理]
     end
     
     subgraph "数据存储层"
@@ -103,9 +102,9 @@ graph LR
     FE --> API
     API --> FS
     API --> AUTH
-    API --> MAIN
-    MAIN --> SUB
-    SUB --> PROMPT
+    API --> AI
+    AI --> PROMPT
+    PROMPT --> RESPONSE
     FS --> LOCAL
     LOCAL --> MD
     LOCAL --> JSON
@@ -118,12 +117,12 @@ sequenceDiagram
     participant U as 用户
     participant F as 前端
     participant B as 后端API
-    participant A as AI Agent
+    participant A as AI Service
     participant FS as 文件系统
     
     U->>F: 创建角色请求
     F->>B: POST /api/characters
-    B->>A: 调用角色Agent
+    B->>A: 调用AI服务
     A->>A: 生成角色信息
     A->>B: 返回角色数据
     B->>FS: 保存角色文件
@@ -159,15 +158,14 @@ sequenceDiagram
 | **fs/promises** | Built-in | 文件系统 | 异步文件操作 |
 | **path** | Built-in | 路径处理 | 文件路径操作 |
 
-### AI代理技术栈
+### AI服务技术栈
 
 | 技术 | 版本 | 用途 | 说明 |
 |------|------|------|------|
-| **Python** | 3.8+ | AI代理语言 | AI代理开发 |
-| **Agno** | Latest | Agent框架 | 多Agent协作框架 |
-| **FastAPI** | Latest | API框架 | AI代理API服务 |
-| **OpenAI API** | Latest | AI服务 | 大语言模型调用 |
+| **OpenAI API** | Latest | AI服务 | GPT大语言模型调用 |
 | **DeepSeek API** | Latest | AI服务 | 国产大语言模型 |
+| **HTTP Client** | Built-in | API调用 | 发送HTTP请求到AI服务 |
+| **JSON处理** | Built-in | 数据格式 | 处理AI响应数据 |
 
 ### 开发工具
 
@@ -184,7 +182,6 @@ sequenceDiagram
 
 - **Node.js**: >= 16.0.0
 - **npm**: >= 8.0.0
-- **Python**: >= 3.8.0
 - **Git**: >= 2.0.0
 
 ### 安装步骤
@@ -205,8 +202,6 @@ cd novel-writing-ai
 # 安装前端依赖
 npm install
 
-# 安装Python依赖（如果需要AI代理功能）
-pip install -r requirements.txt
 ```
 
 #### 3. 环境配置
@@ -265,13 +260,6 @@ npm run start
 npm run dev
 ```
 
-**启动AI代理服务：**
-
-```bash
-# 启动Python AI代理
-cd agno_agent
-python main.py
-```
 
 #### 方式三：开发模式启动
 
@@ -279,8 +267,6 @@ python main.py
 # 同时启动前后端（开发模式）
 npm run dev:full
 
-# 启动多Agent模式
-npm run dev:multiagent
 ```
 
 ### 访问应用
@@ -289,16 +275,11 @@ npm run dev:multiagent
 
 - **前端应用**: http://localhost:5173
 - **后端API**: http://localhost:3001
-- **AI代理服务**: http://localhost:8895
 
 ## 📁 项目结构
 
 ```
 novel-writing-ai/
-├── agno_agent/                 # AI代理服务
-│   ├── main.py                # AI代理主程序
-│   ├── novel_agent.py         # 小说创作Agent
-│   └── mcp_novel_tools.py     # MCP工具集
 ├── src/                       # 前端源码
 │   ├── components/            # React组件
 │   │   ├── ui/               # UI组件库
@@ -654,7 +635,7 @@ chore: 构建过程或辅助工具的变动
 - [Vite](https://vitejs.dev/) - 构建工具
 - [shadcn/ui](https://ui.shadcn.com/) - UI组件库
 - [Tailwind CSS](https://tailwindcss.com/) - CSS框架
-- [Agno](https://agno.com/) - AI Agent框架
+- [OpenAI](https://openai.com/) - AI服务提供商
 
 ## 📞 联系方式
 

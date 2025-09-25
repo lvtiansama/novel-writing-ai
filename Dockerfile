@@ -23,8 +23,6 @@ FROM node:18-alpine AS production
 
 # 安装必要的系统依赖
 RUN apk add --no-cache \
-    python3 \
-    py3-pip \
     git
 
 WORKDIR /app
@@ -49,12 +47,6 @@ RUN mkdir -p data
 COPY start.sh ./
 RUN chmod +x start.sh
 
-# 安装Python依赖（如果需要AI代理功能）
-COPY requirements.txt ./
-RUN pip3 install --no-cache-dir -r requirements.txt
-
-# 复制AI代理代码
-COPY agno_agent/ ./agno_agent/
 
 # 创建非root用户
 RUN addgroup -g 1001 -S nodejs && \

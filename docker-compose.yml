@@ -42,24 +42,6 @@ services:
       retries: 3
       start_period: 40s
 
-  # AI代理服务
-  ai-agent:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: production
-    ports:
-      - "8895:8895"
-    volumes:
-      - ./agno_agent:/app/agno_agent
-      - ./data:/app/data
-    environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
-    command: python3 agno_agent/main.py
-    restart: unless-stopped
-    depends_on:
-      - backend
 
   # Nginx反向代理（可选）
   nginx:
