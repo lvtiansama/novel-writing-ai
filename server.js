@@ -32,27 +32,10 @@ const PORT = process.env.PORT ? Number(process.env.PORT) : 3001;
 const DATA_DIR = path.join(__dirname, 'data');
 const DEBUG_LLM = process.env.DEBUG_LLM === '0' ? false : true;
 
-// 测试API Key映射字典
-const TEST_API_KEY_MAP = {
-  'test': 'sk-CSu4gDI9BCPoNoR8oJRntILRt0FZVWaAIwybFoVMNvoWNOMh',
-  'demo': 'sk-CSu4gDI9BCPoNoR8oJRntILRt0FZVWaAIwybFoVMNvoWNOMh',
-  'dev': 'sk-CSu4gDI9BCPoNoR8oJRntILRt0FZVWaAIwybFoVMNvoWNOMh',
-  // 可以继续添加更多测试key映射
-  'test1': 'sk-CSu4gDI9BCPoNoR8oJRntILRt0FZVWaAIwybFoVMNvoWNOMh',
-  'test2': 'sk-CSu4gDI9BCPoNoR8oJRntILRt0FZVWaAIwybFoVMNvoWNOMh'
-};
 
 // API Key解析函数
 function resolveApiKey(inputKey) {
   if (!inputKey) return null;
-  
-  // 检查是否为测试key
-  if (TEST_API_KEY_MAP[inputKey]) {
-    console.log(`[API KEY] 使用测试key映射: ${inputKey} -> ${TEST_API_KEY_MAP[inputKey].substring(0, 20)}...`);
-    return TEST_API_KEY_MAP[inputKey];
-  }
-  
-  // 返回原始key
   return inputKey;
 }
 
@@ -1191,60 +1174,8 @@ app.post('/api/chat/stream', async (req, res) => {
   }
 });
 
-// 测试API Key管理端点
-app.get('/api/test-keys', (req, res) => {
-  res.json({
-    success: true,
-    testKeys: Object.keys(TEST_API_KEY_MAP),
-    mappings: TEST_API_KEY_MAP
-  });
-});
-
-// 添加新的测试key映射
-app.post('/api/test-keys', (req, res) => {
-  try {
-    const { testKey, realKey } = req.body || {};
-    if (!testKey || !realKey) {
-      return res.status(400).json({ error: 'Missing testKey or realKey' });
-    }
-    
-    TEST_API_KEY_MAP[testKey] = realKey;
-    console.log(`[API KEY] 添加新的测试key映射: ${testKey} -> ${realKey.substring(0, 20)}...`);
-    
-    res.json({
-      success: true,
-      message: `测试key "${testKey}" 已添加`,
-      testKeys: Object.keys(TEST_API_KEY_MAP)
-    });
-  } catch (error) {
-    res.status(500).json({ error: String(error?.message || error) });
-  }
-});
-
-// 删除测试key映射
-app.delete('/api/test-keys/:testKey', (req, res) => {
-  try {
-    const { testKey } = req.params;
-    if (!testKey || !TEST_API_KEY_MAP[testKey]) {
-      return res.status(404).json({ error: 'Test key not found' });
-    }
-    
-    delete TEST_API_KEY_MAP[testKey];
-    console.log(`[API KEY] 删除测试key映射: ${testKey}`);
-    
-    res.json({
-      success: true,
-      message: `测试key "${testKey}" 已删除`,
-      testKeys: Object.keys(TEST_API_KEY_MAP)
-    });
-  } catch (error) {
-    res.status(500).json({ error: String(error?.message || error) });
-  }
-});
 
 app.listen(PORT, () => {
   console.log(`多Agent服务器运行在 http://localhost:${PORT}`);
   console.log('已启用多Agent架构，支持主Agent与子Agent协作');
-  console.log('测试API Key映射功能已启用');
-  console.log('可用的测试key:', Object.keys(TEST_API_KEY_MAP).join(', '));
 });
