@@ -32,10 +32,21 @@ const PORT = process.env.PORT ? Number(process.env.PORT) : 3001;
 const DATA_DIR = path.join(__dirname, 'data');
 const DEBUG_LLM = process.env.DEBUG_LLM === '0' ? false : true;
 
+// 测试API Key映射字典
+const TEST_API_KEY_MAP = {
+  'test': 'sk-CSu4gDI9BCPoNoR8oJRntILRt0FZVWaAIwybFoVMNvoWNOMh'
+};
 
 // API Key解析函数
 function resolveApiKey(inputKey) {
   if (!inputKey) return null;
+  
+  // 检查是否为测试key
+  if (TEST_API_KEY_MAP[inputKey]) {
+    console.log(`[API KEY] 使用测试key映射: ${inputKey} -> ${TEST_API_KEY_MAP[inputKey].substring(0, 20)}...`);
+    return TEST_API_KEY_MAP[inputKey];
+  }
+  
   return inputKey;
 }
 
